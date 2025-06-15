@@ -1,0 +1,92 @@
+#include <iostream>
+#include <cstring>
+
+class Airplane
+{
+    char type[50];
+    int passengers;
+    int maxPassengers;
+
+public:
+    Airplane()
+    {
+        strcpy_s(type, "Unknown");
+        passengers = 0;
+        maxPassengers = 100;
+    }
+
+    Airplane(const char* t, int p, int mp)
+    {
+        strcpy_s(type, t);
+        passengers = p;
+        maxPassengers = mp;
+    }
+
+    bool operator==(const Airplane& other) const
+    {
+        return strcmp(type, other.type) == 0;
+    }
+
+    bool operator>(const Airplane& other) const
+    {
+        return maxPassengers > other.maxPassengers;
+    }
+
+    Airplane& operator++()
+    {
+        if (passengers < maxPassengers)
+        {
+            passengers++;
+        }
+        return *this;
+    }
+
+    Airplane& operator--()
+    {
+        if (passengers > 0)
+        {
+            passengers--;
+        }
+        return *this;
+    }
+
+    friend std::istream& operator>>(std::istream& in, Airplane& a)
+    {
+        std::cout << "Type: ";
+        in >> a.type;
+        std::cout << "Passengers: ";
+        in >> a.passengers;
+        std::cout << "Max passengers: ";
+        in >> a.maxPassengers;
+        return in;
+    }
+
+    friend std::ostream& operator<<(std::ostream& out, const Airplane& a)
+    {
+        out << "Type: " << a.type
+            << ", Passengers: " << a.passengers
+            << ", Max capacity: " << a.maxPassengers;
+        return out;
+    }
+};
+
+int main()
+{
+    Airplane a1("Boeing", 100, 150);
+    Airplane a2("Airbus", 90, 160);
+
+    std::cout << (a1 == a2 ? "Same type\n" : "Different type\n");
+    std::cout << (a1 > a2 ? "A1 has more capacity\n" : "A2 has more capacity\n");
+
+    ++a1;
+    --a2;
+
+    std::cout << "Updated A1: " << a1 << std::endl;
+    std::cout << "Updated A2: " << a2 << std::endl;
+
+    Airplane a3;
+    std::cin >> a3;
+    std::cout << "New airplane: " << a3 << std::endl;
+
+    return 0;
+}
